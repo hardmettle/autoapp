@@ -1,5 +1,5 @@
 create table cars (
-  id  int not null,
+  id  bigint not null,
   title varchar not null,
   fuel_name varchar not null,
   fuel_renewable boolean not null,

@@ -53,7 +53,7 @@ class CarRoutes(carService: CarService) extends Protocol {
     import com.scout24.cars.models.UpdateRegistrationResult._
     onSuccess(saveResult) {
       case UpdateSuccessful => complete("car updated")
-      case NoSuchCar => complete(Conflict, "car does not exist")
+      case NoSuchCar => notFound(urlIdentifiers)
       case InvalidUpdateForNonUsedCar => complete(Conflict, "Invalid update on non-used car")
       case InvalidUpdateForUsedCar => complete(Conflict, "Invalid update on used car")
       case InvalidMileage => complete(Conflict, "Invalid value update for mileage")
