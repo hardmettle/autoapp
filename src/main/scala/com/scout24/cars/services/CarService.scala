@@ -3,7 +3,7 @@ package com.scout24.cars.services
 import com.scout24.cars.models._
 import com.scout24.cars.services.dao.CarsDao
 import com.scout24.cars.utils
-import com.scout24.cars.utils.{OrderingCar, Validation}
+import com.scout24.cars.utils.{ OrderingCar, Validation }
 
 import scala.concurrent.Future
 
@@ -80,12 +80,12 @@ class CarServiceImpl(dao: CarsDao) extends CarService with utils.ActorContext {
             UpdateRegistrationResult.InvalidRegistrationOrMileage
           }
 
-          case _ => updatedCarRegistration = updatedCarRegistration.copy(title = carUpdate.title.getOrElse(x.title),
-            fuel = carUpdate.fuel.getOrElse(x.fuel), price = carUpdate.price.getOrElse(x.price)
-            , used = carUpdate.used.getOrElse(x.used), mileage = if (carUpdate.mileage.nonEmpty)
-              carUpdate.mileage else x.mileage
-            , registration = if (carUpdate.registration.nonEmpty)
-              carUpdate.registration else x.registration)
+          case _ =>
+            updatedCarRegistration = updatedCarRegistration.copy(
+              title = carUpdate.title.getOrElse(x.title),
+              fuel = carUpdate.fuel.getOrElse(x.fuel), price = carUpdate.price.getOrElse(x.price), used = carUpdate.used.getOrElse(x.used), mileage = if (carUpdate.mileage.nonEmpty)
+                carUpdate.mileage else x.mileage, registration = if (carUpdate.registration.nonEmpty)
+                carUpdate.registration else x.registration)
 
             dao.update(updatedCarRegistration).map(_ => UpdateRegistrationResult.UpdateSuccessful)
         }
@@ -97,25 +97,26 @@ class CarServiceImpl(dao: CarsDao) extends CarService with utils.ActorContext {
   override def read(carIdentification: CarIdentification): Future[Option[CarRegistration]] = {
     dao.read(carIdentification)
   }
-  override def readAll(orderBy:Option[String]): Future[List[CarRegistration]] = {
+  override def readAll(orderBy: Option[String]): Future[List[CarRegistration]] = {
     val allCars = dao.readAll()
     allCars map {
-       cars => {
-         orderBy match {
-           case Some(o)  => o.toLowerCase match {
-             case "id" => cars.toList.sortBy(c => c.id)
-             case "title" => cars.toList.sortBy(c => c.title)
-             case "fuelname" => cars.toList.sortBy(c => c.fuel.name)
-             case "fuelrenewable" => cars.toList.sortBy(c => c.fuel.renewable)
-             case "price" => cars.toList.sortBy(c => c.price)
-             case "used" => cars.toList.sortBy(c => c.used)
-             case "mileage" => cars.toList.sortBy(c => c.mileage)
-             case "registration" => cars.toList.sortWith((c1,c2) => OrderingCar.orderCarWithRegistrationDate(c1,c2))
-             case _ => cars.toList.sortBy(c => c.id)
-           }
-           case None => cars.toList.sortBy(c => c.id)
-         }
-       }
+      cars =>
+        {
+          orderBy match {
+            case Some(o) => o.toLowerCase match {
+              case "id" => cars.toList.sortBy(c => c.id)
+              case "title" => cars.toList.sortBy(c => c.title)
+              case "fuelname" => cars.toList.sortBy(c => c.fuel.name)
+              case "fuelrenewable" => cars.toList.sortBy(c => c.fuel.renewable)
+              case "price" => cars.toList.sortBy(c => c.price)
+              case "used" => cars.toList.sortBy(c => c.used)
+              case "mileage" => cars.toList.sortBy(c => c.mileage)
+              case "registration" => cars.toList.sortWith((c1, c2) => OrderingCar.orderCarWithRegistrationDate(c1, c2))
+              case _ => cars.toList.sortBy(c => c.id)
+            }
+            case None => cars.toList.sortBy(c => c.id)
+          }
+        }
     }
   }
   override def delete(carIdentification: CarIdentification): Future[DeleteCarResult.Value] = {

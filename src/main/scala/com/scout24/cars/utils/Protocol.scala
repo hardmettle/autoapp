@@ -1,8 +1,8 @@
 package com.scout24.cars.utils
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.scout24.cars.models.{CarRegistration, CarUpdate, Fuel}
-import spray.json.{DefaultJsonProtocol, PrettyPrinter}
+import com.scout24.cars.models.{ CarRegistration, CarUpdate, Fuel }
+import spray.json.{ DefaultJsonProtocol, PrettyPrinter }
 
 trait Protocol extends DefaultJsonProtocol with SprayJsonSupport {
 

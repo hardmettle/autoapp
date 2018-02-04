@@ -1,6 +1,6 @@
 package com.scout24.cars.services.dao
 
-import com.scout24.cars.models.{CarIdentification, CarRegistration, Fuel}
+import com.scout24.cars.models.{ CarIdentification, CarRegistration, Fuel }
 import com.scout24.cars.services.dao.CarsDaoDefinitions.CarsDaoImpl
 import com.scout24.cars.utils.ActorContext
 import slick.lifted.ProvenShape
@@ -36,7 +36,7 @@ private[dao] object CarsDaoDefinitions extends SlickDAO[CarRegistration, CarRegi
 
   class CarsTable(tag: Tag) extends Table[CarRegistration](tag, "cars") {
     override def * : ProvenShape[CarRegistration] =
-      (id, title, (name, renewable), price, used, mileage, registration).shaped <> ( {
+      (id, title, (name, renewable), price, used, mileage, registration).shaped <> ({
         case (id, title, fuel, price, used, mileage, registration) =>
           CarRegistration(id, title, Fuel.tupled.apply(fuel), price, used, mileage, registration)
       }, { c: CarRegistration =>

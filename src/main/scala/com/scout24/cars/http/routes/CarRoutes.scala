@@ -2,8 +2,8 @@ package com.scout24.cars.http.routes
 
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Directive0, Route}
-import com.scout24.cars.models.{CarIdentification, CarRegistration, CarUpdate}
+import akka.http.scaladsl.server.{ Directive0, Route }
+import com.scout24.cars.models.{ CarIdentification, CarRegistration, CarUpdate }
 import com.scout24.cars.services.CarService
 import com.scout24.cars.utils.Protocol
 

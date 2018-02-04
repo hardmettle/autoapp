@@ -1,7 +1,5 @@
 package com.scout24.cars.models
 
-
-
 import com.scout24.cars.utils.Validation
 
 case class Fuel(name: String, renewable: Boolean) {
@@ -43,12 +41,12 @@ case class CarUpdate(
   price: Option[Int],
   used: Option[Boolean],
   mileage: Option[Int],
-  registration: Option[String]){
+  registration: Option[String]) {
 
-  require(if(title.nonEmpty) title.get.nonEmpty else title.isEmpty, "Title should be provided for the car")
-  require(if(fuel.nonEmpty) fuel.get.valid else fuel.isEmpty, "Valid fuel type should be provided for the car.")
-  require(if(price.nonEmpty) price.get > 0 else price.isEmpty, "Price should be a valid positive number")
-  require(if(used.nonEmpty) used.get.toString.toLowerCase == "true" || used.get.toString.toLowerCase == "false"
+  require(if (title.nonEmpty) title.get.nonEmpty else title.isEmpty, "Title should be provided for the car")
+  require(if (fuel.nonEmpty) fuel.get.valid else fuel.isEmpty, "Valid fuel type should be provided for the car.")
+  require(if (price.nonEmpty) price.get > 0 else price.isEmpty, "Price should be a valid positive number")
+  require(if (used.nonEmpty) used.get.toString.toLowerCase == "true" || used.get.toString.toLowerCase == "false"
   else used.isEmpty, "Used indication should only be true or false")
 
 }
@@ -58,8 +56,7 @@ object RegistrationResult extends Enumeration {
 }
 
 object UpdateRegistrationResult extends Enumeration {
-  val UpdateSuccessful, NoSuchCar,InvalidUpdateForUsedCar
-  ,InvalidUpdateForNonUsedCar,InvalidMileage,InvalidRegistration, InvalidRegistrationOrMileage = Value
+  val UpdateSuccessful, NoSuchCar, InvalidUpdateForUsedCar, InvalidUpdateForNonUsedCar, InvalidMileage, InvalidRegistration, InvalidRegistrationOrMileage = Value
 }
 object DeleteCarResult extends Enumeration {
   val DeleteSuccessful, NoSuchCar = Value
