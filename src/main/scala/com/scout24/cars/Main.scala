@@ -5,6 +5,7 @@ import akka.http.scaladsl.Http
 import com.scout24.cars.http.HttpService
 import com.scout24.cars.utils.{ ActorContext, Config, Migration }
 
+//Main entry point of application which starts the HttpService and binds it to host and port
 object Main extends App with Config with Migration with ActorContext {
   val log: LoggingAdapter = Logging(system, getClass)
   val httpService = HttpService()

@@ -7,23 +7,49 @@ import slick.lifted.ProvenShape
 
 import scala.concurrent.Future
 
+//Trait that represent DAO for Car
 private[services] trait CarsDao {
-
+  /**
+   * Takes CarRegistration and saves/create new car into Car table
+   * @param carRegistration
+   * @return Unit
+   */
   def create(carRegistration: CarRegistration): Future[Unit]
 
+  /**
+   * Reads Car from car table represented by CarIdentification
+   *
+   * @param carIdentification
+   * @return Option of CarRegistration
+   */
   def read(carIdentification: CarIdentification): Future[Option[CarRegistration]]
 
+  /**
+   * Reads all cars from car table
+   * @return sequence of CarRegistration
+   */
   def readAll(): Future[Seq[CarRegistration]]
 
+  /**
+   * Updates current car in table with new CarRegistration
+   * @param carRegistration
+   * @return Unit
+   */
   def update(carRegistration: CarRegistration): Future[Unit]
 
+  /**
+   * Deletes Car from car table represented by CarIdentification
+   * @param carIdentification
+   * @return Unit
+   */
   def delete(carIdentification: CarIdentification): Future[Unit]
 }
-
+//Companion object to instantiate CarsDaoImpl
 object CarsDao {
   def apply(): CarsDao = new CarsDaoImpl()
 }
-
+//car dao object that concrete definition to dao methods eg: read write etc.
+//Also encapsulates CarTable definition representing actual car table
 private[dao] object CarsDaoDefinitions extends SlickDAO[CarRegistration, CarRegistration] {
 
   import dbProfile.profile.api._
@@ -34,6 +60,8 @@ private[dao] object CarsDaoDefinitions extends SlickDAO[CarRegistration, CarRegi
 
   override def fromRow(dbRow: CarRegistration): CarRegistration = ???*/
 
+  // Represents the actual car table. Defines field/columns with
+  // attributes of table and also the serialization/deserialzation of case class to row and vice versa
   class CarsTable(tag: Tag) extends Table[CarRegistration](tag, "cars") {
     override def * : ProvenShape[CarRegistration] =
       (id, title, (name, renewable), price, used, mileage, registration).shaped <> ({
@@ -65,6 +93,7 @@ private[dao] object CarsDaoDefinitions extends SlickDAO[CarRegistration, CarRegi
 
   }
 
+  // Actual implementation trait CarsDao representing DAO for car table
   class CarsDaoImpl extends CarsDao with ActorContext {
     override def create(carRegistration: CarRegistration): Future[Unit] = {
       db.run(query += carRegistration).map(_ => ())

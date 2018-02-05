@@ -4,6 +4,7 @@ import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 
+//Trait that will mix in with HttpService to provide rejection handling of invalid or unsupported requests
 trait RejectionHandling {
 
   def customRejectionHandler: RejectionHandler =

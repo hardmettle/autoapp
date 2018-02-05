@@ -7,23 +7,50 @@ import com.scout24.cars.utils.{ OrderingCar, Validation }
 
 import scala.concurrent.Future
 
+//Trait representing service layer to do car related operation
 trait CarService {
-
+  /**
+   * Save method that takes car registration and saves via dao in table
+   * @param carRegistration
+   * @return RegistrationResult
+   */
   def save(carRegistration: CarRegistration): Future[RegistrationResult.Value]
 
+  /**
+   * Update method that takes CarIdentification to find car and update with CarUpdate using dao object
+   * @param carUpdate
+   * @param carIdentification
+   * @return UpdateRegistrationResult
+   */
   def update(carUpdate: CarUpdate, carIdentification: CarIdentification): Future[UpdateRegistrationResult.Value]
-
+  /**
+   * Read method that takes CarIdentification to find car using dao object
+   * @param carIdentification
+   * @return Option of CarRegistration
+   */
   def read(carIdentification: CarIdentification): Future[Option[CarRegistration]]
 
+  /**
+   * Delete method that takes CarIdentification to delete car using dao object
+   * @param carIdentification
+   * @return DeleteCarResult
+   */
   def delete(carIdentification: CarIdentification): Future[DeleteCarResult.Value]
 
+  /**
+   * Method that returns all the car using dao object. Optionally order by provide parameter else defaults ordering to id
+   * @param orderBy
+   * @return List of CarRegistration
+   */
   def readAll(orderBy: Option[String]): Future[List[CarRegistration]]
 }
 
+//Companion object for CarService that instantiates CarServiceImpl
 object CarService {
   def apply(): CarService = new CarServiceImpl(CarsDao())
 }
 
+//Concrete implementation of CarService and its meothods
 class CarServiceImpl(dao: CarsDao) extends CarService with utils.ActorContext {
 
   override def save(carRegistration: CarRegistration): Future[RegistrationResult.Value] = {
@@ -47,6 +74,12 @@ class CarServiceImpl(dao: CarsDao) extends CarService with utils.ActorContext {
       case Some(x) =>
 
         var updatedCarRegistration = x
+
+        /**
+         * Validations being done before update for eg :
+         * - InvalidUpdateForNonUsedCar if used updated as false with value updated for mileage and registration
+         * - InvalidUpdateForUsedCar if updating used from true to false
+         */
 
         carUpdate match {
           case CarUpdate(_, _, _, Some(used), Some(mileage), Some(registration)) if !used => Future {

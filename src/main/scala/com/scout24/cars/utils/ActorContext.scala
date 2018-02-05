@@ -5,6 +5,7 @@ import akka.stream.ActorMaterializer
 
 import scala.concurrent.ExecutionContext
 
+//Instantiate system actor with ExecutionContext and ActorMaterializer
 trait ActorContext {
   implicit val system = ActorSystem("auto-system")
   implicit val executor: ExecutionContext = system.dispatcher

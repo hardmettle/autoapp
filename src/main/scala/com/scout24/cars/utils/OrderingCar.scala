@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 
 import com.scout24.cars.models.CarRegistration
 
+//Utility to order car using registration date
 object OrderingCar {
   def orderCarWithRegistrationDate(car1: CarRegistration, car2: CarRegistration): Boolean = {
     (car1.registration, car2.registration) match {

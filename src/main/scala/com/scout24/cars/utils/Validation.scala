@@ -3,6 +3,7 @@ package com.scout24.cars.utils
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+//Utility to verify the registration date eg: should be less than current date and of format "dd/MM/yyyy"
 object Validation {
   import java.text.SimpleDateFormat
 

@@ -2,6 +2,7 @@ package com.scout24.cars.utils
 
 import com.typesafe.config.ConfigFactory
 
+// Loads all the config required throughout the application
 trait Config {
   private val config = ConfigFactory.load()
   private val httpConfig = config.getConfig("http")

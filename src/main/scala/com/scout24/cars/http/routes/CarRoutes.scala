@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.{ Directive0, Route }
 import com.scout24.cars.models.{ CarIdentification, CarRegistration, CarUpdate }
 import com.scout24.cars.services.CarService
 import com.scout24.cars.utils.Protocol
-
+//Class which has all the routes for the REST API
 class CarRoutes(carService: CarService) extends Protocol {
   val carRoutes = pathPrefix("car" / "id" / LongNumber) { (id) =>
     val urlIdentifiers = CarIdentification(id)
@@ -36,6 +36,12 @@ class CarRoutes(carService: CarService) extends Protocol {
     }
   }
 
+  /**
+   * Directive that helps to register a car using the service
+   * @param carRegistration
+   * @param urlIdentifiers
+   * @return
+   */
   private def registerCar(carRegistration: CarRegistration, urlIdentifiers: CarIdentification): Route = {
     validateEquals(urlIdentifiers, carRegistration.carIdentification) {
       val saveResult = carService.save(carRegistration)
@@ -47,6 +53,12 @@ class CarRoutes(carService: CarService) extends Protocol {
     }
   }
 
+  /**
+   * Directive that helps to update the car using the service
+   * @param carUpdate
+   * @param urlIdentifiers
+   * @return
+   */
   private def updateCar(carUpdate: CarUpdate, urlIdentifiers: CarIdentification): Route = {
 
     val saveResult = carService.update(carUpdate, urlIdentifiers)
@@ -63,6 +75,11 @@ class CarRoutes(carService: CarService) extends Protocol {
 
   }
 
+  /**
+   * Directive that helps to retrieve the car using the service
+   * @param urlIdentifiers
+   * @return
+   */
   private def retrieveCar(urlIdentifiers: CarIdentification): Route = {
     val carInfo = carService.read(urlIdentifiers)
     onSuccess(carInfo) {
@@ -71,6 +88,11 @@ class CarRoutes(carService: CarService) extends Protocol {
     }
   }
 
+  /**
+   * Directive that helps to delete the car using the service
+   * @param urlIdentifiers
+   * @return
+   */
   private def deleteCar(urlIdentifiers: CarIdentification): Route = {
     val deleteResult = carService.delete(urlIdentifiers)
     import com.scout24.cars.models.DeleteCarResult._
@@ -80,6 +102,11 @@ class CarRoutes(carService: CarService) extends Protocol {
     }
   }
 
+  /**
+   * Directive that helps to get all the cars using the service
+   * @param orderBy
+   * @return
+   */
   private def getAllCars(orderBy: Option[String]): Route = {
     val allCars = carService.readAll(orderBy)
     onSuccess(allCars) {
@@ -87,15 +114,26 @@ class CarRoutes(carService: CarService) extends Protocol {
     }
   }
 
+  /**
+   * Directive to handle not found situation
+   * @param CarIdentification
+   * @return
+   */
   private def notFound(CarIdentification: CarIdentification): Route = {
     complete(NotFound, s"Could not find the car identified by: $CarIdentification")
   }
 
+  /**
+   * Validation of path parameter id and id present in payload i.e. request body
+   * @param urlIdentifiers
+   * @param bodyIdentifiers
+   * @return
+   */
   private def validateEquals(urlIdentifiers: CarIdentification, bodyIdentifiers: CarIdentification): Directive0 = {
     validate(urlIdentifiers == bodyIdentifiers, s"resource identifiers from the path [$urlIdentifiers] and the body: [$bodyIdentifiers] do not match")
   }
 }
-
+//Companion object to instantiate routes
 object CarRoutes {
   def apply(): CarRoutes = new CarRoutes(CarService())
 }

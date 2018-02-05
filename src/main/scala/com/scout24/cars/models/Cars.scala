@@ -2,18 +2,20 @@ package com.scout24.cars.models
 
 import com.scout24.cars.utils.Validation
 
+//case Class that encapsulates Fuel
 case class Fuel(name: String, renewable: Boolean) {
   def valid: Boolean = name.nonEmpty && (renewable.toString.toLowerCase == "true" || renewable.toString.toLowerCase == "false")
 }
-
+//Abstract class for CarId which is id of type Long
 sealed abstract class CarId(id: Long) {
   lazy val carIdentification: CarIdentification = CarIdentification(id)
 }
-
+//case class to represent car identification
 case class CarIdentification(id: Long) {
   override def toString: String = s"id=$id"
 }
-
+//case class that represents actual car object that will be registered from application to persistence.
+//It has all the validation using require method
 case class CarRegistration(
   id: Long,
   title: String,
@@ -34,7 +36,8 @@ case class CarRegistration(
     "format 'dd/MM/yyyy' and should be less than current date if used car")
 
 }
-
+//case class that represents subset of car fields that comes in with request to update the existing car.
+//It has all the validation using require method
 case class CarUpdate(
   title: Option[String],
   fuel: Option[Fuel],
@@ -51,13 +54,15 @@ case class CarUpdate(
 
 }
 
+//Enum representing RegistrationResult of car registration
 object RegistrationResult extends Enumeration {
   val RegistrationSuccessful, AlreadyExists = Value
 }
-
+//Enum representing UpdateRegistrationResult of the car
 object UpdateRegistrationResult extends Enumeration {
   val UpdateSuccessful, NoSuchCar, InvalidUpdateForUsedCar, InvalidUpdateForNonUsedCar, InvalidMileage, InvalidRegistration, InvalidRegistrationOrMileage = Value
 }
+//Enum representing DeleteCarResult of the car
 object DeleteCarResult extends Enumeration {
   val DeleteSuccessful, NoSuchCar = Value
 }
